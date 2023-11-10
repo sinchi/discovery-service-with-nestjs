@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RegisterType } from './register.type';
 import * as semver from 'semver';
+import { RegisterServiceDto } from './register-service.dto';
 
 @Injectable()
 export class RegisterService {
@@ -22,10 +23,10 @@ export class RegisterService {
     });
   }
 
-  register(name: string, version: string, port: number, ip: string): string {
+  register({ name, version, port }: RegisterServiceDto, ip): string {
     this.cleanUpUnresponsiveServicesTimeout();
     const cleanIp: string = this.getCleanIp(ip);
-    const key: string = this.getKey(name, version, port, cleanIp);
+    const key: string = this.getKey({ name, version, port, ip: cleanIp });
     if (!this.services[key]) {
       this.services[key] = {
         timestamp: Math.floor((new Date() as any) / 1000),
@@ -43,9 +44,9 @@ export class RegisterService {
     return key;
   }
 
-  unregister(name: string, version: string, port: number, ip: string): string {
+  unregister({ name, version, port }: RegisterServiceDto, ip): string {
     const cleanIp: string = this.getCleanIp(ip);
-    const key: string = this.getKey(name, version, port, cleanIp);
+    const key: string = this.getKey({ name, version, port, ip: cleanIp });
     if (this.services[key]) {
       delete this.services[key];
       console.log(`Remove service ${name}:${version} at ${cleanIp}:${port}`);
@@ -62,12 +63,7 @@ export class RegisterService {
     return candidates[Math.floor(Math.random() * candidates.length)];
   }
 
-  private getKey(
-    name: string,
-    version: string,
-    port: number,
-    ip: string,
-  ): string {
+  private getKey({ name, version, port, ip }): string {
     return name + version + port + ip;
   }
 

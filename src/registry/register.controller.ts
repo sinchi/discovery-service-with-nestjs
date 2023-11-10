@@ -8,14 +8,12 @@ export class RegisterController {
 
   @Put('/:name/:version/:port')
   register(@Param() params: RegisterServiceDto, @Ip() ip: string) {
-    const { name, version, port } = params;
-    return this.registerService.register(name, version, port, ip);
+    return this.registerService.register({ ...params }, ip);
   }
 
   @Delete('/:name/:version/:port')
   unregister(@Param() params: RegisterServiceDto, @Ip() ip: string) {
-    const { name, version, port } = params;
-    return this.registerService.unregister(name, version, port, ip);
+    return this.registerService.unregister({ ...params }, ip);
   }
 
   @Get(':name/:version')
