@@ -1,0 +1,14 @@
+### Register service 1.1.0:3030
+PUT http://localhost:3000/catalog-service/1.1.0/3030
+
+### register service 1.0.0:3031
+PUT http://localhost:3000/catalog-service/1.1.0/3031
+
+### register service 2.0.0:3032
+PUT http://localhost:3000/catalog-service/2.0.0/3032
+
+### unregister service
+DELETE  http://localhost:3000/catalog-service/1.1.0/3030
+
+### find service
+GET  http://localhost:3000/catalog-service/1.1.0
