@@ -2,7 +2,7 @@ import { Controller, Delete, Get, Ip, Param, Put } from '@nestjs/common';
 import { RegisterServiceDto } from './register-service.dto';
 import { RegisterService } from './register.service';
 
-@Controller('')
+@Controller()
 export class RegisterController {
   constructor(private registerService: RegisterService) {}
 
