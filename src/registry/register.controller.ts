@@ -19,7 +19,7 @@ export class RegisterController {
   }
 
   @Get(':name/:version')
-  find(@Param() params: any) {
+  find(@Param() params: Partial<RegisterServiceDto>) {
     const { name, version } = params;
     return this.registerService.find(name, version);
   }
