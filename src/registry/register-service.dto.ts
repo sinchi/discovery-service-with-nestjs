@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { IsPort, IsSemVer, IsString } from 'class-validator';
 
-@Injectable()
 export class RegisterServiceDto {
+  @IsString()
   name: string;
+  @IsSemVer()
   version: string;
+  @IsPort()
   port: number;
 }
