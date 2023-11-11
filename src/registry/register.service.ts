@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { RegisterType } from './register.type';
 import * as semver from 'semver';
 import { RegisterServiceDto } from './register-service.dto';
@@ -7,6 +7,7 @@ import { RegisterServiceDto } from './register-service.dto';
 export class RegisterService {
   private timeout: number;
   private services: { [key: string]: RegisterType };
+  private logger = new Logger('RegistryService');
 
   constructor() {
     this.timeout = 15;
@@ -18,7 +19,7 @@ export class RegisterService {
     Object.keys(this.services).forEach((key: string) => {
       if (this.services[key].timestamp + this.timeout < now) {
         delete this.services[key];
-        console.log(`Removed exipred service ${key}`);
+        this.logger.log(`Removed exipred service ${key}`);
       }
     });
   }
@@ -36,11 +37,13 @@ export class RegisterService {
         ip: cleanIp,
       };
 
-      console.log(`Added new service ${name}:${version} at ${cleanIp}:${port}`);
+      this.logger.log(
+        `Added new service ${name}:${version} at ${cleanIp}:${port}`,
+      );
       return key;
     }
     this.services[key].timestamp = Math.floor((new Date() as any) / 1000);
-    console.log(`Updated service ${name}:${version} at ${cleanIp}:${port}`);
+    this.logger.log(`Updated service ${name}:${version} at ${cleanIp}:${port}`);
     return key;
   }
 
@@ -49,7 +52,9 @@ export class RegisterService {
     const key: string = this.getKey({ name, version, port, ip: cleanIp });
     if (this.services[key]) {
       delete this.services[key];
-      console.log(`Remove service ${name}:${version} at ${cleanIp}:${port}`);
+      this.logger.log(
+        `Remove service ${name}:${version} at ${cleanIp}:${port}`,
+      );
     }
     return key;
   }
